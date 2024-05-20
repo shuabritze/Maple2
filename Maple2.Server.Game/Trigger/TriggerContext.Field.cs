@@ -5,6 +5,7 @@ using Maple2.Model.Metadata;
 using Maple2.Server.Game.Model;
 using Maple2.Server.Game.Packets;
 using Maple2.Tools.Extensions;
+using Microsoft.Scripting.Utils;
 
 namespace Maple2.Server.Game.Trigger;
 
@@ -214,10 +215,10 @@ public partial class TriggerContext {
         Broadcast(TriggerPacket.Update(ladder));
     }
 
-    public void SetMesh(int[] triggerIds, bool visible, int arg3, int delay, float scale) {
-        DebugLog("[SetMesh] triggerIds:{Ids}, visible:{Visible}, arg3:{Arg3}, delay:{Delay}, scale:{Scale}",
-            string.Join(", ", triggerIds), visible, arg3, delay, scale);
-        UpdateMesh(triggerIds, visible, arg3, delay, scale);
+    public void SetMesh(int[] triggerIds, bool visible, int startDelay, int interval, float fadeDuration) {
+        DebugLog("[SetMesh] triggerIds:{Ids}, visible:{Visible}, startDelay:{startDelay}, interval:{interval}, fadeDuration:{fadeDuration}",
+            string.Join(", ", triggerIds), visible, startDelay, interval, fadeDuration);
+        UpdateMesh(triggerIds, visible, startDelay, interval, fadeDuration);
     }
 
     // examples: arg3=200, arg4=3
@@ -262,26 +263,31 @@ public partial class TriggerContext {
         UpdateMesh(new ArraySegment<int>(triggerIds, 0, count), visible, arg4, delay);
     }
 
-    private void UpdateMesh(ArraySegment<int> triggerIds, bool visible, int delay, int interval, float fade = 0) {
-        foreach (int triggerId in triggerIds) {
-            if (!Objects.Meshes.TryGetValue(triggerId, out TriggerObjectMesh? mesh)) {
-                logger.Warning("Invalid mesh: {Id}", triggerId);
+    private void UpdateMesh(ArraySegment<int> triggerIds, bool visible, int startDelay, int interval, float fadeDuration = 0) {
+        // Adds index to triggerIds in the iteration
+        foreach (var it in triggerIds.Select((x, i) => new { Value = x, Index = i })) {
+            if (!Objects.Meshes.TryGetValue(it.Value, out TriggerObjectMesh? mesh)) {
+                logger.Warning("Invalid mesh: {Id}", it.Value);
                 continue;
             }
             if (mesh.Visible == visible) {
                 continue;
             }
 
-            if (interval > 0) {
-                Events.Schedule(() => UpdateSetMesh(mesh), interval);
-            } else {
-                UpdateSetMesh(mesh);
+            // Assuming triggerIds is sorted correctly
+            int totalDelay = startDelay + (interval * it.Index);
+
+            if (totalDelay > 0) {
+                Events.Schedule(() => UpdateSetMesh(mesh), totalDelay);
+                continue;
             }
+
+            UpdateSetMesh(mesh);
         }
 
         void UpdateSetMesh(TriggerObjectMesh mesh) {
             mesh.Visible = visible;
-            mesh.Fade = (int) fade;
+            mesh.Fade = (int) fadeDuration;
             Broadcast(TriggerPacket.Update(mesh));
             // TODO: Should Fade be reset after sending packet?
         }
