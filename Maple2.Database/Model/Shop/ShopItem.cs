@@ -78,7 +78,7 @@ internal class RestrictedBuyData {
     public long StartTime { get; init; }
     public long EndTime { get; init; }
     public IList<BuyTimeOfDay> TimeRanges { get; init; }
-    public IList<ShopBuyDay> Days { get; init; }
+    public IList<MapleDayOfWeek> Days { get; init; }
 
     [return: NotNullIfNotNull(nameof(other))]
     public static implicit operator Maple2.Model.Game.Shop.RestrictedBuyData?(RestrictedBuyData? other) {

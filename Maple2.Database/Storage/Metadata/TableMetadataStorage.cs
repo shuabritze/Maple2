@@ -55,6 +55,14 @@ public class TableMetadataStorage {
     private readonly Lazy<ItemEquipVariationTable> petVariationTable;
     private readonly Lazy<ItemEquipVariationTable> weaponVariationTable;
 
+    private readonly Lazy<DungeonRoomTable> dungeonRoomTable;
+    private readonly Lazy<DungeonConfigTable> dungeonConfigTable;
+    private readonly Lazy<DungeonRankRewardTable> dungeonRankRewardTable;
+    private readonly Lazy<DungeonRoundGroupTable> dungeonRoundGroupTable;
+    private readonly Lazy<ReverseRaidConfigTable> reverseRaidConfigTable;
+    private readonly Lazy<UnitedWeeklyRewardTable> unitedWeeklyRewardTable;
+
+
     public ChatStickerTable ChatStickerTable => chatStickerTable.Value;
     public DefaultItemsTable DefaultItemsTable => defaultItemsTable.Value;
     public ItemBreakTable ItemBreakTable => itemBreakTable.Value;
@@ -105,6 +113,13 @@ public class TableMetadataStorage {
     public ItemEquipVariationTable PetVariationTable => petVariationTable.Value;
     public ItemEquipVariationTable WeaponVariationTable => weaponVariationTable.Value;
 
+    public DungeonRoomTable DungeonRoomTable => dungeonRoomTable.Value;
+    public DungeonConfigTable DungeonConfigTable => dungeonConfigTable.Value;
+    public DungeonRankRewardTable DungeonRankRewardTable => dungeonRankRewardTable.Value;
+    public DungeonRoundGroupTable DungeonRoundGroupTable => dungeonRoundGroupTable.Value;
+    public ReverseRaidConfigTable ReverseRaidConfigTable => reverseRaidConfigTable.Value;
+    public UnitedWeeklyRewardTable UnitedWeeklyRewardTable => unitedWeeklyRewardTable.Value;
+
     public TableMetadataStorage(MetadataContext context) {
         chatStickerTable = Retrieve<ChatStickerTable>(context, "chatemoticon.xml");
         defaultItemsTable = Retrieve<DefaultItemsTable>(context, "defaultitems.xml");
@@ -153,6 +168,12 @@ public class TableMetadataStorage {
         armorVariationTable = Retrieve<ItemEquipVariationTable>(context, "itemoptionvariation_armor.xml");
         petVariationTable = Retrieve<ItemEquipVariationTable>(context, "itemoptionvariation_pet.xml");
         weaponVariationTable = Retrieve<ItemEquipVariationTable>(context, "itemoptionvariation_weapon.xml");
+        dungeonRoomTable = Retrieve<DungeonRoomTable>(context, "dungeonroom.xml");
+        dungeonConfigTable = Retrieve<DungeonConfigTable>(context, "dungeonconfig_dungeonconfig.xml");
+        dungeonRankRewardTable = Retrieve<DungeonRankRewardTable>(context, "dungeonrankreward.xml");
+        dungeonRoundGroupTable = Retrieve<DungeonRoundGroupTable>(context, "dungeonroundgroup.xml");
+        reverseRaidConfigTable = Retrieve<ReverseRaidConfigTable>(context, "dungeonconfig_reverseraidconfig.xml");
+        unitedWeeklyRewardTable = Retrieve<UnitedWeeklyRewardTable>(context, "dungeonconfig_unitedweeklyreward.xml");
     }
 
     private static Lazy<T> Retrieve<T>(MetadataContext context, string key) where T : Table {

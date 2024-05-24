@@ -70,4 +70,11 @@ public class TableMetadata {
 [JsonDerivedType(typeof(PrestigeLevelRewardTable), typeDiscriminator: "adventurelevelreward")]
 [JsonDerivedType(typeof(PrestigeMissionTable), typeDiscriminator: "adventurelevelmission")]
 [JsonDerivedType(typeof(BlackMarketTable), typeDiscriminator: "blackmarkettable")]
+[JsonDerivedType(typeof(DungeonRoomTable), typeDiscriminator: "dungeonroom")]
+[JsonDerivedType(typeof(DungeonMissionTable), typeDiscriminator: "dungeonmission")]
+[JsonDerivedType(typeof(DungeonRankRewardTable), typeDiscriminator: "dungeonrankreward")]
+[JsonDerivedType(typeof(DungeonRoundGroupTable), typeDiscriminator: "dungeonrounddata")]
+[JsonDerivedType(typeof(DungeonConfigTable), typeDiscriminator: "dungeonconfig")]
+[JsonDerivedType(typeof(ReverseRaidConfigTable), typeDiscriminator: "reverseraidconfig")]
+[JsonDerivedType(typeof(UnitedWeeklyRewardTable), typeDiscriminator: "unitedweeklyreward")]
 public abstract record Table;

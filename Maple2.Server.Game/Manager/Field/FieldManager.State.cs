@@ -76,6 +76,9 @@ public partial class FieldManager {
             Metadata.Property.Type != MapType.Arcade &&
             Metadata.Property.Type != MapType.PocketRealm &&
             Metadata.Property.Type != MapType.Dungeon &&
+            // Dungeon lobby special cases
+            Metadata.Property.EnterReturnId < 50000001 &&
+            Metadata.Property.EnterReturnId > 50000014 &&
             Metadata.Property.Type != MapType.Event &&
             Metadata.Property.Type != MapType.Event2) {
             player.Character.ReturnMapId = Metadata.Property.EnterReturnId;

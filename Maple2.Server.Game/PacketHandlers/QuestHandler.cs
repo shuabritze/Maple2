@@ -65,7 +65,10 @@ public class QuestHandler : PacketHandler<GameSession> {
                 break;
             case Command.RemoteComplete:
                 HandleRemoteComplete(session, packet);
-                return;
+                break;
+            case Command.GoToDungeon:
+                HandleGoToDungeon(session, packet);
+                break;
         }
     }
 
@@ -190,5 +193,19 @@ public class QuestHandler : PacketHandler<GameSession> {
         session.Send(canUseField
             ? FieldEnterPacket.Request(session.Player)
             : FieldEnterPacket.Error(MigrationError.s_move_err_default));
+    }
+
+    private void HandleGoToDungeon(GameSession session, IByteReader packet) {
+        int questId = packet.ReadInt();
+        if (!session.Quest.TryGetQuest(questId, out Quest? quest)) {
+            return;
+        }
+
+        int dungeonId = quest.Metadata.GoToDungeon.MapId;
+
+        // DungeonManager.TryGetDungeon(dungeonId, out Dungeon? dungeon))
+        // dungeon.Users.add(session);
+        // dungeon.TeleportToEntrance(session);
+        Logger.Debug("GotoDungon: {dungeonId}", dungeonId);
     }
 }

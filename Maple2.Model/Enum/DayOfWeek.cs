@@ -1,6 +1,6 @@
 ﻿namespace Maple2.Model.Enum;
 
-public enum ShopBuyDay : byte {
+public enum MapleDayOfWeek : byte {
     Sunday = 1,
     Monday = 2,
     Tuesday = 3,

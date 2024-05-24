@@ -92,6 +92,15 @@ public class TableMapper : TypeMapper<TableMetadata> {
         }
         // SetItemOption
         yield return new TableMetadata { Name = "setitem*.xml", Table = ParseSetItem() };
+
+        // Dungeons
+        yield return new TableMetadata { Name = "dungeonroom.xml", Table = ParseDungeonRoomTable() };
+        yield return new TableMetadata { Name = "dungeonmission.xml", Table = ParseDungeonMissionTable() };
+        yield return new TableMetadata { Name = "dungeonrankreward.xml", Table = ParseDungeonRankRewardTable() };
+        yield return new TableMetadata { Name = "dungeonrounddata.xml", Table = ParseDungeonRoundGroupTable() };
+        yield return new TableMetadata { Name = "dungeonconfig_dungeonconfig.xml", Table = ParseDungeonConfigTable() };
+        yield return new TableMetadata { Name = "dungeonconfig_reverseraidconfig.xml", Table = ParseReverseRaidConfigTable() };
+        yield return new TableMetadata { Name = "dungeonconfig_unitedweeklyreward.xml", Table = ParseUnitedWeeklyRewardTable() };
     }
 
     private ChatStickerTable ParseChatSticker() {
@@ -1320,5 +1329,179 @@ public class TableMapper : TypeMapper<TableMetadata> {
                 ParseBlackMarketTab(subTab, results);
             }
         }
+    }
+
+    private DungeonRoomTable ParseDungeonRoomTable() {
+        var results = new Dictionary<int, DungeonRoomTable.Entry>();
+        foreach ((int id, DungeonRoom room) in parser.ParseDungeonRoom()) {
+            DateTime openPeriod = DateTime.TryParseExact(room.openPeriodDate, "yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out openPeriod) ? openPeriod : DateTime.MinValue;
+
+            results.Add(id, new DungeonRoomTable.Entry(
+                Id: id,
+                DungeonLevel: room.dungeonLevel,
+                PlayType: (Model.Enum.DungeonPlayType) room.playType,
+                GroupType: (Model.Enum.DungeonGroupType) room.groupType,
+                ClearType: room.clearType ?? string.Empty,
+                ClearValue: room.clearValue,
+                CooldownType: (Model.Enum.DungeonCooldownType) room.cooldownType,
+                CooldownValue: room.cooldownValue,
+                SortOrder: room.sortOrder,
+                RewardCount: room.rewardCount,
+                SubRewardCount: room.subRewardCount,
+                IsAccountReward: room.isAccountReward,
+                UnionRewardId: room.unionRewardID,
+                RoundId: room.roundID,
+                RewardExp: room.rewardExp,
+                RewardExpRate: room.rewardExpRate,
+                RewardMeso: room.rewardMeso,
+                ScoreBonusId: room.scoreBonusId,
+                RewardLimitedDropBoxIds: room.rewardLimitedDropBoxIds ?? Array.Empty<int>(),
+                RewardUnlimitedDropBoxIds: room.rewardUnlimitedDropBoxIds ?? Array.Empty<int>(),
+                SeasonRankRewardId: room.seasonRankRewardID,
+                LobbyFieldId: room.lobbyFieldID,
+                FieldIds: room.fieldIDs ?? Array.Empty<int>(),
+                DurationTick: room.durationTick,
+                IsExpireTimeOut: room.isExpireTimeOut,
+                TimerType: (Model.Enum.DungeonTimerType) room.timerType,
+                MinUserCount: room.minUserCount,
+                MaxUserCount: room.maxUserCount,
+                GearScore: room.gearScore,
+                LimitAchieveId: room.limitAchieveID,
+                LimitPlayerLevel: room.limitPlayerLevel,
+                LimitVip: room.limitVIP,
+                LimitDayOfWeeks: room.limitDayOfWeeks?.Select(day => (MapleDayOfWeek) day).ToArray() ?? Array.Empty<MapleDayOfWeek>(),
+                LimitMesoRevival: room.limitMesoRevival,
+                LimitMeratRevival: room.limitMeratRevival,
+                LimitClearDungeon: room.limitClearDungeon ?? Array.Empty<int>(),
+                LimitAdditionalEffects: room.limitAdditionalEffects ?? Array.Empty<int>(),
+                LimitRecommendWeapon: room.limitRecommendWeapon,
+                DungeonBanner: room.dungeonBanner ?? string.Empty,
+                BossIcon: room.bossIcon ?? string.Empty,
+                IsUseBossIcon: room.isUseBossIcon,
+                BossRankingType: (Model.Enum.DungeonBossRankingType) room.BossRankingType,
+                OpenPeriodTag: room.openPeriodTag ?? string.Empty,
+                IsPartyOnly: room.isPartyOnly,
+                IsChangeMaxUser: room.isChangeMaxUser,
+                PlayerCountFactorID: room.playerCountFactorID,
+                CustomMonsterLevel: room.customMonsterLevel,
+                ChaosDamageMeter: room.chaosDamageMeter,
+                IsMoveOutToBackupField: room.isMoveOutToBackupField,
+                DefaultRevivalLimitCount: room.defaultRevivalLimitCount,
+                DungeonHelperRequireClearCount: room.dungeonHelperRequireClearCount,
+                IsUseRandomMatch: room.isUseRandomMatch,
+                IsLeaveAfterCloseReward: room.isLeaveAfterCloseReward,
+                PartyMissions: room.partyMissions ?? Array.Empty<int>(),
+                UserMissions: room.userMissions ?? Array.Empty<int>(),
+                RankTableID: room.rankTableID,
+                RepresentID: room.representID,
+                BossRanking: room.BossRanking,
+                OpenPeriodDate: openPeriod,
+                IsDisableFindHelper: room.isDisableFindHelper,
+                ExtraRewardTicketBaseCount: room.extraRewardTicketBaseCount,
+                ExtraRewardTicketTableID: room.extraRewardTicketTableID,
+                IsLimitTime: room.isLimitTime,
+                IsTimeUp: room.isTimeUp,
+                IsRandomField: room.isRandomField,
+                DungeonHelperManualChange: room.dungeonHelperManualChange,
+                IsUseFindMember: room.isUseFindMember,
+                FindHelperRewardDropBoxIds: room.findHelperRewardDropBoxIds ?? Array.Empty<int>(),
+                FindHelperExtraRewardDropBoxIds: room.findHelperExtraRewardDropBoxIds ?? Array.Empty<int>(),
+                IsDisableRandomMatch: room.isDisableRandomMatch,
+                RequireRole: (Model.Enum.DungeonRequireRole) room.requireRole
+            ));
+        }
+        return new DungeonRoomTable(results);
+    }
+
+    private DungeonMissionTable ParseDungeonMissionTable() {
+        var results = new Dictionary<int, DungeonMissionTable.Entry>();
+        foreach ((int id, DungeonMission mission) in parser.ParseDungeonMission()) {
+            results.Add(id, new DungeonMissionTable.Entry(
+                Id: id,
+                Type: mission.type,
+                Value1: mission.value1,
+                Value2: mission.value2,
+                MaxScore: mission.maxScore,
+                ApplyCount: mission.applyCount,
+                IsPenaltyType: mission.isPenaltyType
+            ));
+        }
+        return new DungeonMissionTable(results);
+    }
+
+    private DungeonRoundGroupTable ParseDungeonRoundGroupTable() {
+        var results = new Dictionary<int, DungeonRoundGroupTable.Entry>();
+        foreach ((int id, DungeonRoundGroup group) in parser.ParseDungeonRoundData()) {
+            results.Add(id, new DungeonRoundGroupTable.Entry(
+                Id: id,
+                Groups: group.v.Select(entry => new DungeonRoundGroupTable.DungeonRoundGroup(
+                    RewardId: entry.rewardID,
+                    GearScore: entry.gearScore
+                )).ToList()
+            ));
+        }
+        return new DungeonRoundGroupTable(results);
+    }
+
+    private DungeonRankRewardTable ParseDungeonRankRewardTable() {
+        var results = new Dictionary<int, DungeonRankRewardTable.Entry>();
+        foreach ((int id, DungeonRankReward reward) in parser.ParseDungeonRankReward()) {
+            results.Add(id, new DungeonRankRewardTable.Entry(
+                Id: id,
+                Rewards: reward.v.Select(entry => new DungeonRankRewardTable.DungeonRankReward(
+                    Rank: entry.rank,
+                    ItemId: entry.itemID,
+                    SystemMailId: entry.systemMailID
+                )).ToList()
+            ));
+        }
+        return new DungeonRankRewardTable(results);
+    }
+
+    private DungeonConfigTable ParseDungeonConfigTable() {
+        var results = new List<DungeonConfigTable.Entry>();
+        foreach (DungeonConfig config in parser.ParseDungeonConfig()) {
+            foreach (MissionRank rank in config.MissionRank) {
+                results.Add(new DungeonConfigTable.Entry(
+                    Ranks: rank.group.Select(group => new DungeonConfigTable.MissionRank(
+                        Id: group.id,
+                        Desc: group.desc,
+                        MaxScore: group.maxScore,
+                        Entries: group.rank.Select(entry => new DungeonConfigTable.MissionRankGroupEntry(
+                            Score: entry.score
+                        )).ToList()
+                    )).ToList()
+                ));
+            }
+        }
+        return new DungeonConfigTable(results);
+    }
+
+    private ReverseRaidConfigTable ParseReverseRaidConfigTable() {
+        var results = new List<ReverseRaidConfigTable.Entry>();
+        foreach (ReverseRaidConfig config in parser.ParseReverseRaidConfig()) {
+            DateTime startTime = DateTime.TryParseExact(config.startDate, "yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out startTime) ? startTime : DateTime.MinValue;
+            results.Add(new ReverseRaidConfigTable.Entry(
+                StartDate: startTime,
+                PeriodDays: config.periodDays,
+                Dungeons: config.v.Select(entry => new ReverseRaidConfigTable.ReverseRaidConfigDungeonEntry(
+                    DungeonId: entry.dungeonID
+                )).ToList()
+            ));
+        }
+        return new ReverseRaidConfigTable(results);
+    }
+
+    private UnitedWeeklyRewardTable ParseUnitedWeeklyRewardTable() {
+        var results = new List<UnitedWeeklyRewardTable.Entry>();
+        foreach (UnitedWeeklyReward reward in parser.ParseUnitedWeeklyReward()) {
+            foreach (UnitedWeeklyRewardEntry entry in reward.v) {
+                results.Add(new UnitedWeeklyRewardTable.Entry(
+                 RewardCount: entry.rewardCount,
+                    RewardId: entry.rewardID
+                ));
+            }
+        }
+        return new UnitedWeeklyRewardTable(results);
     }
 }

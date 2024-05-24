@@ -376,7 +376,7 @@ public sealed class ShopManager {
             }
 
             if (buyData.Days.Count > 0) {
-                if (!buyData.Days.Contains(ToShopBuyDay(DateTime.Now.DayOfWeek))) {
+                if (!buyData.Days.Contains(ToMapleDayOfWeek(DateTime.Now.DayOfWeek))) {
                     session.Send(ShopPacket.Error(ShopError.s_err_invalid_item_cannot_buy_by_period));
                     return;
                 }
@@ -578,15 +578,15 @@ public sealed class ShopManager {
         db.SaveCharacterShopItemData(session.CharacterId, characterShopItemData.Values.SelectMany(value => value.Values).ToList());
     }
 
-    private ShopBuyDay ToShopBuyDay(DayOfWeek dayOfWeek) {
+    private MapleDayOfWeek ToMapleDayOfWeek(DayOfWeek dayOfWeek) {
         return dayOfWeek switch {
-            DayOfWeek.Monday => ShopBuyDay.Monday,
-            DayOfWeek.Tuesday => ShopBuyDay.Tuesday,
-            DayOfWeek.Wednesday => ShopBuyDay.Wednesday,
-            DayOfWeek.Thursday => ShopBuyDay.Thursday,
-            DayOfWeek.Friday => ShopBuyDay.Friday,
-            DayOfWeek.Saturday => ShopBuyDay.Saturday,
-            DayOfWeek.Sunday => ShopBuyDay.Sunday,
+            DayOfWeek.Monday => MapleDayOfWeek.Monday,
+            DayOfWeek.Tuesday => MapleDayOfWeek.Tuesday,
+            DayOfWeek.Wednesday => MapleDayOfWeek.Wednesday,
+            DayOfWeek.Thursday => MapleDayOfWeek.Thursday,
+            DayOfWeek.Friday => MapleDayOfWeek.Friday,
+            DayOfWeek.Saturday => MapleDayOfWeek.Saturday,
+            DayOfWeek.Sunday => MapleDayOfWeek.Sunday,
             _ => throw new InvalidDataException("Invalid day of week"),
         };
     }

@@ -25,7 +25,7 @@ public class PartyHandler : PacketHandler<GameSession> {
         SetLeader = 17,
         SearchPartyJoin = 23,
         SummonParty = 29,
-        Unknown = 32,
+        PartySearchDungeonList = 32,
         PartySearch = 33,
         CancelPartySearch = 34,
         VoteKick = 45,
@@ -63,11 +63,11 @@ public class PartyHandler : PacketHandler<GameSession> {
             case Command.SummonParty:
                 HandleSummonParty(session);
                 return;
-            case Command.Unknown:
-                HandleUnknown(session, packet);
-                return;
             case Command.PartySearch:
                 HandlePartySearch(session, packet);
+                return;
+            case Command.PartySearchDungeonList:
+                HandlePartySearchDungeonList(session, packet);
                 return;
             case Command.CancelPartySearch:
                 HandleCancelPartySearch(session, packet);
@@ -238,14 +238,22 @@ public class PartyHandler : PacketHandler<GameSession> {
         // This only reaches if player does not have a summon scroll
     }
 
-    private void HandleUnknown(GameSession session, IByteReader packet) {
-        // TODO: Implement
-        byte unk1 = packet.ReadByte();
+    private void HandlePartySearch(GameSession session, IByteReader packet) {
+        int dungeonId = packet.ReadInt();
     }
 
-    private void HandlePartySearch(GameSession session, IByteReader packet) {
-        // TODO: Implement
-        int dungeonId = packet.ReadInt();
+    private void HandlePartySearchDungeonList(GameSession session, IByteReader packet) {
+        DungeonGroupType type = packet.Read<DungeonGroupType>();
+
+        var dungeonIds = new List<int>();
+
+        int count = packet.ReadInt();
+        for (int i = 0; i < count; i++) {
+            var id = packet.ReadInt();
+            dungeonIds.Add(id);
+        }
+
+        Logger.Debug("PartySearch: {type} {ids}", type, string.Join(", ", dungeonIds));
     }
 
     private void HandleCancelPartySearch(GameSession session, IByteReader packet) {

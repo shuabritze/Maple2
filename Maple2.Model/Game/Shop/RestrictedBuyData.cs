@@ -12,11 +12,11 @@ public class RestrictedBuyData : IByteSerializable {
     public long StartTime { get; init; }
     public long EndTime { get; init; }
     public IList<BuyTimeOfDay> TimeRanges { get; init; }
-    public IList<ShopBuyDay> Days { get; init; }
+    public IList<MapleDayOfWeek> Days { get; init; }
 
     public RestrictedBuyData() {
         TimeRanges = new List<BuyTimeOfDay>();
-        Days = new List<ShopBuyDay>();
+        Days = new List<MapleDayOfWeek>();
     }
 
     public RestrictedBuyData Clone() {
@@ -39,8 +39,8 @@ public class RestrictedBuyData : IByteSerializable {
         }
 
         writer.WriteByte((byte) Days.Count);
-        foreach (ShopBuyDay day in Days) {
-            writer.Write<ShopBuyDay>(day);
+        foreach (MapleDayOfWeek day in Days) {
+            writer.Write<MapleDayOfWeek>(day);
         }
     }
 }
