@@ -9,9 +9,11 @@ message ChatRequest {
   }
   message Party {
     int32 party_id = 1;
+    repeated int64 member_ids = 2;
   }
   message Guild {
     int64 guild_id = 1;
+    repeated int64 member_ids = 2;
   }
   message World {
   }
@@ -29,9 +31,10 @@ message ChatRequest {
   int64 character_id = 2;
   string name = 3;
   string message = 4;
+  repeated int64 item_uids = 5;
 
   oneof chat {
-    Whisper whisper = 5;
+    Whisper whisper = 6;
     Party party = 7;
     Guild guild = 8;
     World world = 11;
